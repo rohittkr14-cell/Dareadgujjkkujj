@@ -68,7 +68,7 @@ async def create_mm_group(event, title, pfp, admin_id):
             channel=chat,
             user_id=admin,
             admin_rights=admin_rights,
-            rank="Middleman"
+            rank="Middlemem"
         ))
 
         # Creator tag
@@ -76,7 +76,7 @@ async def create_mm_group(event, title, pfp, admin_id):
             channel=chat,
             user_id=creator,
             admin_rights=admin_rights,
-            rank="Middleman Group"
+            rank="Middlemem Group"
         ))
 
         # Upload PFP
@@ -96,12 +96,12 @@ async def create_mm_group(event, title, pfp, admin_id):
         await event.reply(f"❌ Error:\n{e}")
 
 
-# tents MM group → /rohit
-@client.on(events.NewMessage(pattern="/rohit"))
+# tents MM group → /ziox
+@client.on(events.NewMessage(pattern="/ziox"))
 async def tents_group(event):
     await create_mm_group(
         event,
-        "tents MM || @Middlemem",
+        "tents MM | @middlemem",
         PFP1,
         CREATEGROUP_ADMIN
     )
@@ -112,7 +112,7 @@ async def tents_group(event):
 async def adu_group(event):
     await create_mm_group(
         event,
-        "Adu MM || @Middlemem",
+        "Adu MM | @middlemem",
         PFP2,
         CREATEADU_ADMIN
     )
