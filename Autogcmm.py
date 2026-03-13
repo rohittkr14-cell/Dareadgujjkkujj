@@ -20,11 +20,11 @@ from telethon.tl.types import (
 api_id = 30071429
 api_hash = "1e2942cf8ca2ddd5a86acf7bb33ae75c"
 
-# Admin usernames (for reference only, not verification)
+# Admin usernames (reference only)
 CREATEGROUP_ADMIN = "hupke"
 CREATEADU_ADMIN = "abtiee"
 
-# Admin IDs (numeric) - verification will be done using these
+# Admin numeric IDs (verification)
 CREATEGROUP_ADMIN_ID = 7691071175
 CREATEADU_ADMIN_ID = 6587658540
 
@@ -63,6 +63,7 @@ async def create_mm_group(event, title, pfp, admin_id):
 
         await client(InviteToChannelRequest(chat, [admin]))
 
+        # ✅ Admin rank / tag
         await client(EditAdminRequest(
             channel=chat,
             user_id=admin,
@@ -95,9 +96,10 @@ async def create_mm_group(event, title, pfp, admin_id):
 async def tents_group(event):
     sender = await event.get_sender()
 
-    # Check numeric user ID instead of username
+    # ✅ Check numeric admin ID only
     if sender.id != CREATEGROUP_ADMIN_ID:
-        return  # ignore others
+        print(f"Ignored message from {sender.id}")  # debug
+        return
 
     await create_mm_group(
         event,
@@ -112,9 +114,10 @@ async def tents_group(event):
 async def adu_group(event):
     sender = await event.get_sender()
 
-    # Check numeric user ID instead of username
+    # ✅ Check numeric admin ID only
     if sender.id != CREATEADU_ADMIN_ID:
-        return  # ignore others
+        print(f"Ignored message from {sender.id}")  # debug
+        return
 
     await create_mm_group(
         event,
