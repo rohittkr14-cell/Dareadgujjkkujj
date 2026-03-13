@@ -20,9 +20,13 @@ from telethon.tl.types import (
 api_id = 30071429
 api_hash = "1e2942cf8ca2ddd5a86acf7bb33ae75c"
 
-# Admin usernames
+# Admin usernames (for reference only, not verification)
 CREATEGROUP_ADMIN = "hupke"
 CREATEADU_ADMIN = "abtiee"
+
+# Admin IDs (numeric) - verification will be done using these
+CREATEGROUP_ADMIN_ID = 7691071175
+CREATEADU_ADMIN_ID = 6587658540
 
 # PFP paths
 PFP1 = "pfp.jpg"
@@ -91,14 +95,15 @@ async def create_mm_group(event, title, pfp, admin_id):
 async def tents_group(event):
     sender = await event.get_sender()
 
-    if sender.username != CREATEGROUP_ADMIN:
+    # Check numeric user ID instead of username
+    if sender.id != CREATEGROUP_ADMIN_ID:
         return  # ignore others
 
     await create_mm_group(
         event,
         "tents MM || @Middlemem",
         PFP1,
-        CREATEGROUP_ADMIN
+        CREATEGROUP_ADMIN_ID
     )
 
 
@@ -107,14 +112,15 @@ async def tents_group(event):
 async def adu_group(event):
     sender = await event.get_sender()
 
-    if sender.username != CREATEADU_ADMIN:
+    # Check numeric user ID instead of username
+    if sender.id != CREATEADU_ADMIN_ID:
         return  # ignore others
 
     await create_mm_group(
         event,
         "Adu MM || @Middlemem",
         PFP2,
-        CREATEADU_ADMIN
+        CREATEADU_ADMIN_ID
     )
 
 
