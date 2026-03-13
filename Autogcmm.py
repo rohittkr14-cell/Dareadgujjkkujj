@@ -20,13 +20,13 @@ from telethon.tl.types import (
 api_id = 30071429
 api_hash = "1e2942cf8ca2ddd5a86acf7bb33ae75c"
 
-# Admin usernames (replace with your admins' actual usernames, without @)
+# Admin usernames (replace with actual usernames without @)
 CREATEGROUP_ADMIN = "hupke"
 CREATEADU_ADMIN = "abtiee"
 
-# PFP paths
-PFP1 = "/storage/emulated/0/Autogc/pfp.jpg"
-PFP2 = "/storage/emulated/0/Autogc/pfp2.jpg"
+# PFP paths (relative to script folder)
+PFP1 = "pfp.jpg"
+PFP2 = "pfp2.jpg"
 
 # Admin rights
 admin_rights = ChatAdminRights(
@@ -81,7 +81,6 @@ async def create_mm_group(event, title, pfp, admin_id):
 
         # Upload PFP
         file = await client.upload_file(pfp)
-
         await client(EditPhotoRequest(
             channel=chat,
             photo=InputChatUploadedPhoto(file)
@@ -89,7 +88,6 @@ async def create_mm_group(event, title, pfp, admin_id):
 
         # Invite link
         invite = await client(ExportChatInviteRequest(chat))
-
         await event.reply(f"✅ Group Created\n\n{invite.link}")
 
     except Exception as e:
