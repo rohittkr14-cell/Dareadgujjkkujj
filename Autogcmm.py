@@ -20,18 +20,15 @@ from telethon.tl.types import (
 api_id = 30071429
 api_hash = "1e2942cf8ca2ddd5a86acf7bb33ae75c"
 
-# Admin usernames (reference only)
+# Admin usernames
 CREATEGROUP_ADMIN = "hupke"
 CREATEADU_ADMIN = "abtiee"
 
-# Admin numeric IDs (verification)
-CREATEGROUP_ADMIN_ID = 7691071175
-CREATEADU_ADMIN_ID = 6587658540
-
-# PFP paths
+# AWS-compatible PFP paths (files must exist in same folder as script)
 PFP1 = "pfp.jpg"
 PFP2 = "pfp2.jpg"
 
+# Admin rights
 admin_rights = ChatAdminRights(
     change_info=True,
     post_messages=True,
@@ -50,6 +47,7 @@ client = TelegramClient("session", api_id, api_hash)
 
 async def create_mm_group(event, title, pfp, admin_id):
     try:
+        # Create group
         result = await client(CreateChannelRequest(
             title=title,
             about="Always confirm that you are dealing with me and not with an impersonator!",
@@ -58,12 +56,14 @@ async def create_mm_group(event, title, pfp, admin_id):
 
         chat = result.chats[0]
 
-        admin = await client.get_input_entity(admin_id)
+        # Entities
+        admin = await client.get_input_entity(admin_id)  # works with username
         creator = await client.get_me()
 
+        # Invite admin
         await client(InviteToChannelRequest(chat, [admin]))
 
-        # ✅ Admin rank / tag
+        # Admin tag
         await client(EditAdminRequest(
             channel=chat,
             user_id=admin,
@@ -71,6 +71,7 @@ async def create_mm_group(event, title, pfp, admin_id):
             rank="Middleman"
         ))
 
+        # Creator tag
         await client(EditAdminRequest(
             channel=chat,
             user_id=creator,
@@ -78,56 +79,46 @@ async def create_mm_group(event, title, pfp, admin_id):
             rank="Middleman Group"
         ))
 
+        # Upload PFP
         file = await client.upload_file(pfp)
+
         await client(EditPhotoRequest(
             channel=chat,
             photo=InputChatUploadedPhoto(file)
         ))
 
+        # Invite link
         invite = await client(ExportChatInviteRequest(chat))
+
         await event.reply(f"✅ Group Created\n\n{invite.link}")
 
     except Exception as e:
         await event.reply(f"❌ Error:\n{e}")
 
 
-# tents MM group
-@client.on(events.NewMessage(pattern="/creategroup"))
+# tents MM group → /rohit
+@client.on(events.NewMessage(pattern="/rohit"))
 async def tents_group(event):
-    sender = await event.get_sender()
-
-    # ✅ Check numeric admin ID only
-    if sender.id != CREATEGROUP_ADMIN_ID:
-        print(f"Ignored message from {sender.id}")  # debug
-        return
-
     await create_mm_group(
         event,
         "tents MM || @Middlemem",
         PFP1,
-        CREATEGROUP_ADMIN_ID
+        CREATEGROUP_ADMIN
     )
 
 
-# Adu MM group
-@client.on(events.NewMessage(pattern="/createadu"))
+# Adu MM group → /adu
+@client.on(events.NewMessage(pattern="/adu"))
 async def adu_group(event):
-    sender = await event.get_sender()
-
-    # ✅ Check numeric admin ID only
-    if sender.id != CREATEADU_ADMIN_ID:
-        print(f"Ignored message from {sender.id}")  # debug
-        return
-
     await create_mm_group(
         event,
         "Adu MM || @Middlemem",
         PFP2,
-        CREATEADU_ADMIN_ID
+        CREATEADU_ADMIN
     )
 
 
-# Auto delete service messages
+# Auto delete ALL service messages
 @client.on(events.NewMessage)
 async def delete_service_messages(event):
     try:
